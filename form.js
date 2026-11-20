@@ -119,7 +119,8 @@
   var box = document.createElement('div');
   box.className = 'fp-box';
   box.innerHTML = '<label for="fp-name">နာမည် (Name) *</label><input id="fp-name" maxlength="80" autocomplete="name">' +
-    '<label for="fp-contact">Telegram username / Phone *</label><input id="fp-contact" maxlength="80" placeholder="@username or 09..." autocomplete="tel">';
+    '<label for="fp-contact">Telegram username / Phone *</label><input id="fp-contact" maxlength="80" placeholder="@username or 09..." autocomplete="tel">' +
+    '<label for="fp-email">Email (plan will be sent here) *</label><input id="fp-email" type="email" maxlength="120" placeholder="you@example.com" autocomplete="email">';
   cards[0].parentElement.insertBefore(box, cards[0]);
 
   var btn = all('button').filter(function (b) { return /Plan စီစဉ်ပေးမယ်/.test(txt(b)); })[0];
@@ -131,12 +132,13 @@
     all('.fp-err').forEach(function (e) { e.classList.remove('fp-err'); });
     var bad = [];
     function need(el, ok) { if (!ok) { el.classList.add('fp-err'); bad.push(el); } }
-    var name = $('#fp-name').value.trim(), contact = $('#fp-contact').value.trim();
+    var name = $('#fp-name').value.trim(), contact = $('#fp-contact').value.trim(), email = $('#fp-email').value.trim();
     need($('#fp-name'), name.length > 0);
     need($('#fp-contact'), contact.length > 2);
+    need($('#fp-email'), /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email));
     Object.keys(ranges).forEach(function (k) { var v = +inputs[k].value; need(inputs[k], v >= ranges[k][0] && v <= ranges[k][1]); });
     var data = {
-      name: name, contact: contact,
+      name: name, contact: contact, email: email,
       gender: picked(gender, ['Male', 'Female', 'Other']),
       age: +inputs.age.value, height: +inputs.height.value, weight: +inputs.weight.value, target: +inputs.target.value,
       goal: picked(goal, goalVals), level: picked(level, lvlVals), location: picked(location_, locVals),
